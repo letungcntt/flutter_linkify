@@ -341,18 +341,18 @@ TextSpan buildTextSpan(
               inlineSpan: TextSpan(
                 text: element.text,
                 style: linkStyle,
-                recognizer: TapGestureRecognizer()..onTap = () {
-                  if(onOpen != null) onOpen(element);
-                },
+                // recognizer: TapGestureRecognizer()..onTap = () {
+                //   if(onOpen != null) onOpen(element);
+                // },
               ),
             );
           } else {
             return TextSpan(
               text: element.text,
               style: linkStyle,
-              recognizer: TapGestureRecognizer()..onTap = () {
-                if(onOpen != null) onOpen(element);
-              },
+              // recognizer: TapGestureRecognizer()..onTap = () {
+              //   if(onOpen != null) onOpen(element);
+              // },
             );
           }
         } else {
