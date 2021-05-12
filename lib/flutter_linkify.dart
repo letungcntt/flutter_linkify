@@ -341,14 +341,18 @@ TextSpan buildTextSpan(
               inlineSpan: TextSpan(
                 text: element.text,
                 style: linkStyle,
-                recognizer: onOpen != null ? (TapGestureRecognizer()..onTap = () => onOpen(element)) : null,
+                recognizer: TapGestureRecognizer()..onTap = () {
+                  if(onOpen != null) onOpen(element);
+                },
               ),
             );
           } else {
             return TextSpan(
               text: element.text,
               style: linkStyle,
-              recognizer: onOpen != null ? (TapGestureRecognizer()..onTap = () => onOpen(element)) : null,
+              recognizer: TapGestureRecognizer()..onTap = () {
+                if(onOpen != null) onOpen(element);
+              },
             );
           }
         } else {
