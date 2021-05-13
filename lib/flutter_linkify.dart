@@ -17,124 +17,7 @@ export 'package:linkify/linkify.dart'
 
 /// Callback clicked link
 typedef LinkCallback = void Function(LinkableElement link);
-
-/// Turns URLs into links
-class Linkify extends StatelessWidget {
-  /// Text to be linkified
-  final String text;
-
-  /// Linkifiers to be used for linkify
-  final List<Linkifier> linkifiers;
-
-  /// Callback for tapping a link
-  final LinkCallback? onOpen;
-
-  /// linkify's options.
-  final LinkifyOptions options;
-
-  // TextSpan
-
-  /// Style for non-link text
-  final TextStyle? style;
-
-  /// Style of link text
-  final TextStyle? linkStyle;
-
-  // Text.rich
-
-  /// How the text should be aligned horizontally.
-  final TextAlign textAlign;
-
-  /// Text direction of the text
-  final TextDirection? textDirection;
-
-  /// The maximum number of lines for the text to span, wrapping if necessary
-  final int? maxLines;
-
-  /// How visual overflow should be handled.
-  final TextOverflow overflow;
-
-  /// The number of font pixels for each logical pixel
-  final double textScaleFactor;
-
-  /// Whether the text should break at soft line breaks.
-  final bool softWrap;
-
-  /// The strut style used for the vertical layout
-  final StrutStyle? strutStyle;
-
-  /// Used to select a font when the same Unicode character can
-  /// be rendered differently, depending on the locale
-  final Locale? locale;
-
-  /// Defines how to measure the width of the rendered text.
-  final TextWidthBasis textWidthBasis;
-
-  /// Defines how the paragraph will apply TextStyle.height to the ascent of the first line and descent of the last line.
-  final TextHeightBehavior? textHeightBehavior;
-
-  const Linkify({
-    Key? key,
-    required this.text,
-    this.linkifiers = defaultLinkifiers,
-    this.onOpen,
-    this.options = const LinkifyOptions(),
-    // TextSpan
-    this.style,
-    this.linkStyle,
-    // RichText
-    this.textAlign = TextAlign.start,
-    this.textDirection,
-    this.maxLines,
-    this.overflow = TextOverflow.clip,
-    this.textScaleFactor = 1.0,
-    this.softWrap = true,
-    this.strutStyle,
-    this.locale,
-    this.textWidthBasis = TextWidthBasis.parent,
-    this.textHeightBehavior,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final elements = linkify(
-      text,
-      options: options,
-      linkifiers: linkifiers,
-    );
-
-    return Text.rich(
-      buildTextSpan(
-        elements,
-        style: Theme.of(context).textTheme.bodyText2?.merge(style),
-        onOpen: onOpen,
-        useMouseRegion: true,
-        linkStyle: Theme.of(context)
-            .textTheme
-            .bodyText2
-            ?.merge(style)
-            .copyWith(
-              color: Colors.blueAccent,
-              decoration: TextDecoration.underline,
-            )
-            .merge(linkStyle),
-      ),
-      textAlign: textAlign,
-      textDirection: textDirection,
-      maxLines: maxLines,
-      overflow: overflow,
-      textScaleFactor: textScaleFactor,
-      softWrap: softWrap,
-      strutStyle: strutStyle,
-      locale: locale,
-      textWidthBasis: textWidthBasis,
-      textHeightBehavior: textHeightBehavior,
-    );
-  }
-}
-
-/// Turns URLs into links
-class SelectableLinkify extends StatelessWidget {
+class SelectableLinkify extends StatefulWidget {
   /// Text to be linkified
   final String text;
 
@@ -261,107 +144,98 @@ class SelectableLinkify extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<SelectableLinkify> createState() => _SelectableLinkifyState();
+}
+
+class _SelectableLinkifyState extends State<SelectableLinkify> {
+  late TapGestureRecognizer _onTapTextSpan;
+
+  @override
+  void initState() {
+    _onTapTextSpan = TapGestureRecognizer();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _onTapTextSpan.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final elements = linkify(
-      text,
-      options: options,
-      linkifiers: linkifiers,
+      widget.text,
+      options: widget.options,
+      linkifiers: widget.linkifiers,
     );
 
     return SelectableText.rich(
       buildTextSpan(
         elements,
-        style: Theme.of(context).textTheme.bodyText2?.merge(style),
-        onOpen: onOpen,
+        style: Theme.of(context).textTheme.bodyText2?.merge(widget.style),
+        onOpen: widget.onOpen,
         linkStyle: Theme.of(context)
             .textTheme
             .bodyText2
-            ?.merge(style)
+            ?.merge(widget.style)
             .copyWith(
-              color: Colors.blueAccent,
+              color: Colors.blue,
               decoration: TextDecoration.underline,
             )
-            .merge(linkStyle),
+            .merge(widget.linkStyle),
       ),
-      textAlign: textAlign,
-      textDirection: textDirection,
-      minLines: minLines,
-      maxLines: maxLines,
-      focusNode: focusNode,
-      strutStyle: strutStyle,
-      showCursor: showCursor,
-      textScaleFactor: textScaleFactor,
-      autofocus: autofocus,
-      toolbarOptions: toolbarOptions,
-      cursorWidth: cursorWidth,
-      cursorRadius: cursorRadius,
-      cursorColor: cursorColor,
-      dragStartBehavior: dragStartBehavior,
-      enableInteractiveSelection: enableInteractiveSelection,
-      onTap: onTap,
-      scrollPhysics: scrollPhysics,
-      textWidthBasis: textWidthBasis,
-      textHeightBehavior: textHeightBehavior,
-      cursorHeight: cursorHeight,
-      selectionControls: selectionControls,
-      onSelectionChanged: onSelectionChanged,
+      textAlign: widget.textAlign,
+      textDirection: widget.textDirection,
+      minLines: widget.minLines,
+      maxLines: widget.maxLines,
+      focusNode: widget.focusNode,
+      strutStyle: widget.strutStyle,
+      showCursor: widget.showCursor,
+      textScaleFactor: widget.textScaleFactor,
+      autofocus: widget.autofocus,
+      toolbarOptions: widget.toolbarOptions,
+      cursorWidth: widget.cursorWidth,
+      cursorRadius: widget.cursorRadius,
+      cursorColor: widget.cursorColor,
+      dragStartBehavior: widget.dragStartBehavior,
+      enableInteractiveSelection: widget.enableInteractiveSelection,
+      onTap: widget.onTap,
+      scrollPhysics: widget.scrollPhysics,
+      textWidthBasis: widget.textWidthBasis,
+      textHeightBehavior: widget.textHeightBehavior,
+      cursorHeight: widget.cursorHeight,
+      selectionControls: widget.selectionControls,
+      onSelectionChanged: widget.onSelectionChanged,
     );
   }
-}
 
-class LinkableSpan extends WidgetSpan {
-  LinkableSpan({
-    required MouseCursor mouseCursor,
-    required InlineSpan inlineSpan,
-  }) : super(
-          child: MouseRegion(
-            cursor: mouseCursor,
-            child: Text.rich(
-              inlineSpan,
-            ),
-          ),
-        );
-}
-
-/// Raw TextSpan builder for more control on the RichText
-TextSpan buildTextSpan(
-  List<LinkifyElement> elements, {
-  TextStyle? style,
-  TextStyle? linkStyle,
-  LinkCallback? onOpen,
-  bool useMouseRegion = false,
-}) {
-  return TextSpan(
-    children: elements.map<InlineSpan>(
-      (element) {
-        if (element is LinkableElement) {
-          if (useMouseRegion) {
-            return LinkableSpan(
-              mouseCursor: SystemMouseCursors.click,
-              inlineSpan: TextSpan(
-                text: element.text,
-                style: linkStyle,
-                // recognizer: TapGestureRecognizer()..onTap = () {
-                //   if(onOpen != null) onOpen(element);
-                // },
-              ),
+  /// Raw TextSpan builder for more control on the RichText
+  TextSpan buildTextSpan(
+    List<LinkifyElement> elements, {
+    TextStyle? style,
+    TextStyle? linkStyle,
+    LinkCallback? onOpen
+  }) {
+    return TextSpan(
+      children: elements.map<InlineSpan>(
+        (element) {
+          if (element is LinkableElement) {
+            return TextSpan(
+              text: element.text,
+              style: linkStyle,
+              recognizer: _onTapTextSpan..onTap = () {
+                if(onOpen != null) onOpen(element);
+              },
             );
           } else {
             return TextSpan(
               text: element.text,
-              style: linkStyle,
-              // recognizer: TapGestureRecognizer()..onTap = () {
-              //   if(onOpen != null) onOpen(element);
-              // },
+              style: style,
             );
           }
-        } else {
-          return TextSpan(
-            text: element.text,
-            style: style,
-          );
-        }
-      },
-    ).toList(),
-  );
+        },
+      ).toList(),
+    );
+  }
 }
